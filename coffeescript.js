@@ -74,7 +74,7 @@ if (!raining) {
 var cholesterol, healthy;
 
 cholesterol = 127;
-healthy = (200 > cholesterol && cholesterol > 60);
+healthy = (60 < cholesterol && cholesterol < 200);
 
 
 
@@ -131,6 +131,30 @@ if (pick === 47 || pick === 92 || pick === 13) {
 
 
 
+var process_stuff, retrieve_boring_stuff, retrieve_cool_stuff;
+
+retrieve_cool_stuff = function() {
+  var message;
+  message = "look at this cool stuff!";
+  return $.getJSON("/echo/json/", function(response) {
+    return process_stuff(response, message);
+  });
+};
+
+retrieve_boring_stuff = function() {
+  var message;
+  message = "look at this boring stuff!";
+  return $.getJSON("/echo/json/", function(response) {
+    return process_stuff(response, message);
+  });
+};
+
+process_stuff = function(r, message) {
+  return $('#messages').append(message).append("<br/>");
+};
+
+
+
 /* Lexical Scoping and Variable Safety */
 var changeNumbers, inner, outer;
 
@@ -143,6 +167,7 @@ changeNumbers = function() {
 };
 
 inner = changeNumbers();
+
 
 
 

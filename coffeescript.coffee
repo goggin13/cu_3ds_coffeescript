@@ -4,12 +4,14 @@
   coffeescript.org
   
   * Coffeescript is a language that compiles 1-1 into the equivalent javascript
+  * Offers lots of syntactic goodness that seeks to abstract away
+    some of the less attractive features of Javascript
   * There is no additional run-time interpration; web sites written
-    in Coffeescript continue to serve Javascript to clients
+    in Coffeescript continue to serve Javascript to clients as before
   * Because of this, Coffeescript works seamlessly with any existing 
     JS library, and vice versa.
   * The output of Coffeescript passes JSLint without warnings.
-  * It ships with the standard Rails install as of Rails 3.1
+  * As of 3.1 it ships with Rails
     * this means if you are using Rails, all it takes to start using
       Coffeescript is to write .coffee files where your normally put 
       your .js files 
@@ -35,7 +37,9 @@
     sudo npm install -g coffee-script
   * you should now be able to type 'coffee' at the command prompt
     to start an interactive session
-  * for textmaters : https://github.com/jashkenas/coffee-script-tmbundle
+  * for textmaters, this bundle has syntax highlighting and other goodies,
+    and is maintained by the author of Coffeescript (so it's pretty reliable)
+    * https://github.com/jashkenas/coffee-script-tmbundle
 ###  
   
   
@@ -61,13 +65,16 @@
 ### Functions ###
 
 # function in JS becomes "->" in coffee
-square = (x) -> x * x
+square = (x) -> x * x   # no semicolons :)
 
 # explicit "return" not required; the last line in the
 # function will become the return value;
 cube = (x) -> square(x) * x
 
 # default arguments can be passed a la Python or Ruby
+# Coffeescript is white space sensitive; like Python,
+# there are no braces and the end of the function 
+# is indicated by returning to the previous tab level
 say_hello = (name="matt") -> 
   alert "hello #{name}!"
 
@@ -81,8 +88,6 @@ say_hello "Jane"
 
 
 ### Objects and Arrays ###
-
-# Coffeescript is white space sensitive
 
 # Commas after newlines can be ommitted
 bitlist = [
@@ -131,7 +136,7 @@ dance_outside() unless raining
 ### Chained Comparisons ###
 
 cholesterol = 127
-healthy = 200 > cholesterol > 60
+healthy = 60 < cholesterol < 200
 
 
 
@@ -159,7 +164,6 @@ CoffeeScript	    JavaScript
     true,yes,on	  true
     false,no,off	false
     @,this	      this
-    of	          in  
     in	          no JS equivalent
 ###
 
@@ -193,12 +197,34 @@ winner = yes if pick in [47, 92, 13]
 
 
 
+
+retrieve_cool_stuff = ->
+  message = "look at this cool stuff!"
+  $.getJSON "/echo/json/", (response) ->
+    process_stuff response, message
+
+retrieve_boring_stuff = ->
+  message = "look at this boring stuff!"
+  $.getJSON "/echo/json/", (response) ->
+    process_stuff response, message
+
+process_stuff = (r, message) ->
+  # process r
+  $('#messages').append(message).append "<br/>"
+
+retrieve_cool_stuff()
+retrieve_boring_stuff()
+
+
+
+
+
 ### Lexical Scoping and Variable Safety ###
 
 # Automatically considers the current functions scope;
 # if there is a matching variable, then var is omitted.
 # Otherwise an appropriate var declaration is inserted
-# at the beginning of the function
+# at the beginning of the current scope
 
 outer = 1
 changeNumbers = ->
@@ -212,9 +238,26 @@ window.global_variable = "everyone can see me"
 
 
 
+### Debugging challenge II 
+
+var SomeClass = function () {
+
+  this.getClassStuff = function () {
+     $.getJSON("/json", function (response) {
+         this.class_stuff = response;
+     });
+  };
+  
+  return this;
+};
+
+###
+
+
+
 ### Function Inheritance ###
 
-# recall @ is an alias for "this"
+# recall in Coffeescript @ is an alias for "this"
 Account = (customer, cart) ->
   @customer = customer
   @cart = cart
